@@ -4,3 +4,7 @@ Implement the image compression by DPCM (differential pulse code modulation) enc
 ## v1.0
 
 - Support 8-bit quantisation
+
+## v1.0.1
+
+- Improvements of quantiser

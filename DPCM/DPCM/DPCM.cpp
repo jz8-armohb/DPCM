@@ -12,15 +12,18 @@ void DpcmEncoding(unsigned char* yBuff, unsigned char* qPredErrBuff, unsigned ch
 	for (int i = 0; i < h; i++) {
 		prediction = 128;	// The prediction of the first pixel of each row set to be 128
 		predErr = yBuff[i * w] - prediction;	// predErr ∈ [-128, 128] (8-bit)
-		qPredErrBuff[i * w] = predErr / 2 + 64;	// 8-bit quantisation of prediction error (quantised prediction error ∈ [0, 128])
-		invPredErr = (qPredErrBuff[i * w] - 64) * 2;
+		qPredErrBuff[i * w] = predErr + 128;	// Quantised prediction error with the domain of [0,255]
+		if (qPredErrBuff[i * w] > 255) {
+			qPredErrBuff[i * w] = 255;
+		}
+		invPredErr = qPredErrBuff[i * w] - 128;
 		reconBuff[i * w] = invPredErr + prediction;	// Reconstruction level
 
 		for (int j = 1; j < w; j++) {	// Strat from the second pixel of each row
 			prediction = reconBuff[i * w + j - 1];	// The previous pixel value set as prediction
 			predErr = yBuff[i * w + j] - prediction;	// predErr ∈ [-255, 255] (9-bit)
-			qPredErrBuff[i * w + j] = predErr / 2 + 127;	// Quantised prediction error ∈ [0, 254]
-			invPredErr = (qPredErrBuff[i * w + j] - 127) * 2;
+			qPredErrBuff[i * w + j] = (predErr + 255) / 2;	// Quantised prediction error ∈ [0, 255]
+			invPredErr = qPredErrBuff[i * w + j] * 2 - 255;
 			reconBuff[i * w + j] = invPredErr + prediction;	// Reconstruction level
 		}
 	}
