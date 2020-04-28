@@ -149,6 +149,7 @@
   <ItemGroup>
     <ClCompile Include="DPCM.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PMF.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="declarations.h" />

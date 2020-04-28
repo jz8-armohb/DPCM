@@ -1,5 +1,6 @@
 #include <iostream>
 #include "declarations.h"
+#include <algorithm>
 using namespace std;
 
 int main(int argc, char* argv[]) {
@@ -41,7 +42,18 @@ int main(int argc, char* argv[]) {
     fread(oriYBuff, sizeof(unsigned char), w * h, oriFilePtr);
 
     /* DPCM */
-    DpcmEncoding(oriYBuff, qpeYBuff, recYbuff);
+    DpcmEncoding(oriYBuff, qpeYBuff, recYbuff, 4);
+
+    ///* Debug */
+    //for (int i = 255; i < h; i++) {
+    //    for (int j = 0; j < w; j++) {
+    //        printf("(%-4d,%-4d):%-5d,%-5d\n", i, j, oriYBuff[i * w + j], recYbuff[i * w + j]);
+    //    }
+    //}
+    //int M = *max_element(recYbuff, recYbuff + w * h);
+    //printf("Maximum: %d\n", M);
+    ///* End debug */
+
     memset(uBuff, 128, w * h / 4);
     memset(vBuff, 128, w * h / 4);
     fwrite(qpeYBuff, sizeof(unsigned char), w * h, qpeFilePtr);
@@ -50,6 +62,10 @@ int main(int argc, char* argv[]) {
     fwrite(recYbuff, sizeof(unsigned char), w * h, recFilePtr);
     fwrite(uBuff, sizeof(unsigned char), w * h / 4, recFilePtr);    // Greyscale image
     fwrite(vBuff, sizeof(unsigned char), w * h / 4, recFilePtr);
+
+    /* Write the PMF & entropy stats into a csv file */
+    PMF(oriYBuff, "Lena-PMF.csv");
+    PMF(qpeYBuff, "Lena_QPE-PMF.csv");
 
 
     fclose(oriFilePtr);
