@@ -1,9 +1,9 @@
 #include <iostream>
 #include "declarations.h"
-#include <algorithm>
 using namespace std;
 
 int main(int argc, char* argv[]) {
+    int qBits = 6;
     const char* orFileName = "Lena.yuv";
     const char* qpeFileName = "Lena_QPE.yuv";   // Name of quantised prediction error file
     const char* recFileName = "Lena_reconstruction.yuv";    // Name of reconstruction level file
@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
     fread(oriYBuff, sizeof(unsigned char), w * h, oriFilePtr);
 
     /* DPCM */
-    DpcmEncoding(oriYBuff, qpeYBuff, recYbuff, 4);
+    DpcmEncoding(oriYBuff, qpeYBuff, recYbuff, qBits);
     memset(uBuff, 128, w * h / 4);
     memset(vBuff, 128, w * h / 4);
     fwrite(qpeYBuff, sizeof(unsigned char), w * h, qpeFilePtr);
@@ -52,10 +52,10 @@ int main(int argc, char* argv[]) {
     fwrite(uBuff, sizeof(unsigned char), w * h / 4, recFilePtr);    // Greyscale image
     fwrite(vBuff, sizeof(unsigned char), w * h / 4, recFilePtr);
 
-    /* Write the PMF & entropy stats into a csv file */
+    /* Write stats into csv files */
     PMF(oriYBuff, "Lena-PMF.csv");
     PMF(qpeYBuff, "Lena_QPE-PMF.csv");
-
+    PSNR(oriYBuff, recYbuff, qBits, "Lena_reconstruction-PSNR.csv");
 
     fclose(oriFilePtr);
     fclose(qpeFilePtr);
