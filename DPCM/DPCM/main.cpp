@@ -43,17 +43,6 @@ int main(int argc, char* argv[]) {
 
     /* DPCM */
     DpcmEncoding(oriYBuff, qpeYBuff, recYbuff, 4);
-
-    ///* Debug */
-    //for (int i = 255; i < h; i++) {
-    //    for (int j = 0; j < w; j++) {
-    //        printf("(%-4d,%-4d):%-5d,%-5d\n", i, j, oriYBuff[i * w + j], recYbuff[i * w + j]);
-    //    }
-    //}
-    //int M = *max_element(recYbuff, recYbuff + w * h);
-    //printf("Maximum: %d\n", M);
-    ///* End debug */
-
     memset(uBuff, 128, w * h / 4);
     memset(vBuff, 128, w * h / 4);
     fwrite(qpeYBuff, sizeof(unsigned char), w * h, qpeFilePtr);
