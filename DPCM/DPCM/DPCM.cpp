@@ -13,7 +13,6 @@ int PixelOverflow(int value, int thLower, int thUpper) {
 		return unsigned char(value);
 	}
 }
-
 void DpcmEncoding(unsigned char* yBuff, unsigned char* qPredErrBuff, unsigned char* reconBuff, int qBits) {
 	int prediction;
 	int predErr;	// Prediction error

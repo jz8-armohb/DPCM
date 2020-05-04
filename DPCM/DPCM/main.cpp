@@ -1,13 +1,15 @@
 #include <iostream>
+#include <string>
+#include <sstream>
 #include "declarations.h"
 using namespace std;
 
 int main(int argc, char* argv[]) {
-    int qBits = 6;
+    int qBits = 1;
     const char* orFileName = "Lena.yuv";
-    const char* qpeFileName = "Lena_QPE.yuv";   // Name of quantised prediction error file
-    const char* recFileName = "Lena_reconstruction.yuv";    // Name of reconstruction level file
-	FILE* oriFilePtr;
+    const char* qpeFileName = "Lena_QPE (1 bit).yuv";   // Name of quantised prediction error file
+    const char* recFileName = "Lena_reconstruction (1 bit).yuv";    // Name of reconstruction level file
+    FILE* oriFilePtr;
     FILE* qpeFilePtr;
 	FILE* recFilePtr;
 
@@ -53,9 +55,9 @@ int main(int argc, char* argv[]) {
     fwrite(vBuff, sizeof(unsigned char), w * h / 4, recFilePtr);
 
     /* Write stats into csv files */
-    PMF(oriYBuff, "Lena-PMF.csv");
-    PMF(qpeYBuff, "Lena_QPE-PMF.csv");
-    PSNR(oriYBuff, recYbuff, qBits, "Lena_reconstruction-PSNR.csv");
+    PrintPMF_Entropy(oriYBuff, qBits, "Lena-PMF (1 bit).csv", "Lena-entropy.csv");
+    PrintPMF_Entropy(qpeYBuff, qBits, "Lena_QPE-PMF (1 bit).csv", "Lena_QPE-entropy.csv");
+    PrintPSNR(oriYBuff, recYbuff, qBits, "Lena_reconstruction-PSNR.csv");
 
     fclose(oriFilePtr);
     fclose(qpeFilePtr);
